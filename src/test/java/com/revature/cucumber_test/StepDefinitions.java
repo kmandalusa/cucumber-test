@@ -34,6 +34,7 @@ public class StepDefinitions {
 	@When("Register as name {string} with email {string},mobile {string} and password {string}")
 	public void register_as_name_with_email_mobile_and_password(String name, String email, String mobile, String pass)
 			throws Exception {
+		// Post request from API
 		HttpPost request = new HttpPost("http://localhost:8090/customers");
 		Map<String, String> data = new HashMap<>();
 		data.put("name", name);
@@ -41,31 +42,31 @@ public class StepDefinitions {
 		data.put("mobile", mobile);
 		data.put("password", pass);
 
-		String json = objectMapper.writeValueAsString(data);
-		StringEntity entity = new StringEntity(json);
-		request.addHeader("content-type", "application/json");
-		request.setEntity(entity);
-		response = httpClient.execute(request);
+		String json = objectMapper.writeValueAsString(data); // Converting object or map into json
+		StringEntity entity = new StringEntity(json); // http body
+		request.addHeader("content-type", "application/json"); // adding headers
+		request.setEntity(entity);// set the http body
+		response = httpClient.execute(request);// Send the request to the server
 
 	}
 
 	@Then("Success")
 	public void success() {
-		int status = response.getStatusLine().getStatusCode();
-		assertEquals(200, status);
+		int status = response.getStatusLine().getStatusCode();// getting the status from server
+		assertEquals(200, status); // Comparing the received status with success status
 	}
 
 	@When("Ask for all customers")
 	public void ask_for_all_customers() throws Exception {
-		HttpGet request = new HttpGet("http://localhost:8090/customers");
-		response = httpClient.execute(request);
+		HttpGet request = new HttpGet("http://localhost:8090/customers"); // Request the server to get data
+		response = httpClient.execute(request); // Response from the server which returns customers object
 	}
 
 	@Then("Return all customers")
 	public void return_all_customers() throws Exception {
-		int status = response.getStatusLine().getStatusCode();
+		int status = response.getStatusLine().getStatusCode();// Status of the response
 		assertEquals(200, status);
-		String json = EntityUtils.toString(response.getEntity());
+		String json = EntityUtils.toString(response.getEntity());// Converting the response into json
 		System.out.println(json);
 	}
 
@@ -100,16 +101,16 @@ public class StepDefinitions {
 		// assertEquals(404, status);
 	}
 
-	@Given("Earlier customer delete the same")
-	public void earlier_customer_delete_the_same() throws Exception {
-		String url = "http://localhost:8090/customers/" + customerId;
-		HttpDelete request = new HttpDelete(url);
-		response = httpClient.execute(request);
-	}
-
-	@Then("Delete successful")
-	public void delete_successful() {
-		int status = response.getStatusLine().getStatusCode();
-		assertEquals(200, status);
-	}
+//	@Given("Earlier customer delete the same")
+//	public void earlier_customer_delete_the_same() throws Exception {
+//		String url = "http://localhost:8090/customers/" + customerId;
+//		HttpDelete request = new HttpDelete(url);
+//		response = httpClient.execute(request);
+//	}
+//
+//	@Then("Delete successful")
+//	public void delete_successful() {
+//		int status = response.getStatusLine().getStatusCode();
+//		assertEquals(200, status);
+//	}
 }
